@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://blood-donor-system-5lbr.onrender.com/api';
-
-// Type definitions
+// const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://blood-donor-system-5lbr.onrender.com/api';
+const API_BASE_URL = 'https://blood-donor-system-5lbr.onrender.com/api'; 
 interface ApiResponse<T = any> {
   success: boolean;
   message?: string;
