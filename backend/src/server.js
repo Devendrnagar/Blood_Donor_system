@@ -21,6 +21,20 @@ import inventoryRoutes from './routes/inventoryRoutes.js';
 // Load environment variables
 dotenv.config();
 
+// Validate required environment variables
+const requiredEnvVars = ['MONGODB_URI'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:');
+  missingEnvVars.forEach(envVar => {
+    console.error(`   - ${envVar}`);
+  });
+  console.error('\n💡 Please create a .env file in the backend directory with the required variables.');
+  console.error('   You can use .env.example as a template.\n');
+  process.exit(1);
+}
+
 // Connect to MongoDB
 connectDB();
 

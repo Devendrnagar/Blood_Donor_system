@@ -2,7 +2,16 @@ import mongoose from 'mongoose';
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+    // Check if MONGODB_URI is provided
+    const mongoUri = process.env.MONGODB_URI;
+    
+    if (!mongoUri) {
+      throw new Error('MONGODB_URI environment variable is not defined. Please set it in your environment variables or .env file.');
+    }
+
+    console.log('🔗 Attempting to connect to MongoDB...');
+    
+    const conn = await mongoose.connect(mongoUri, {
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
       maxPoolSize: 10, // Maintain up to 10 socket connections
