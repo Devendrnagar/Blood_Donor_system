@@ -1,5 +1,6 @@
 import Donor from '../models/Donor.js';
 import User from '../models/User.js';
+import { sendDonorRegistrationConfirmation } from '../utils/emailService.js';
 
 // @desc    Register as donor
 // @route   POST /api/donors/register
@@ -22,6 +23,15 @@ export const registerDonor = async (req, res) => {
 
     const donor = await Donor.create(donorData);
     await donor.populate('user', 'fullName email phone avatar');
+
+    // Send registration confirmation email
+    try {
+      await sendDonorRegistrationConfirmation(donor.user, donor);
+      console.log('✅ Donor registration confirmation email sent to:', donor.user.email);
+    } catch (emailError) {
+      console.error('⚠️ Failed to send registration confirmation email:', emailError.message);
+      // Don't fail the registration if email fails
+    }
 
     res.status(201).json({
       success: true,

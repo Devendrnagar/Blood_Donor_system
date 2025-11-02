@@ -23,7 +23,7 @@ export const sendEmail = async (options) => {
     const transporter = createTransporter();
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || 'noreply@blooddonation.com',
+      from: process.env.EMAIL_FROM || 'indiangovt@blooddonation.com',
       to: options.email,
       subject: options.subject,
       html: options.html,
@@ -171,6 +171,59 @@ export const sendCertificateEmail = async (donor, certificate) => {
   return sendEmail({
     email: donor.email,
     subject: '🏆 Your Blood Donation Certificate is Ready!',
+    html: message
+  });
+};
+
+// Send donor registration confirmation email
+export const sendDonorRegistrationConfirmation = async (user, donor) => {
+  const message = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #e53e3e;">🩸 Welcome to Our Blood Donation Community!</h2>
+      <p>Dear ${user.fullName},</p>
+      <p>Thank you for registering as a blood donor! Your registration has been completed successfully.</p>
+      
+      <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <h3>Your Donor Profile:</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li><strong>Name:</strong> ${user.fullName}</li>
+          <li><strong>Email:</strong> ${user.email}</li>
+          <li><strong>Blood Type:</strong> ${donor.bloodType}</li>
+          <li><strong>Age:</strong> ${donor.age} years</li>
+          <li><strong>Location:</strong> ${donor.address.city}, ${donor.address.state}</li>
+          <li><strong>Registration Date:</strong> ${new Date().toLocaleDateString()}</li>
+        </ul>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${process.env.FRONTEND_URL}/donor/profile" 
+           style="background-color: #e53e3e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          View Your Donor Profile
+        </a>
+      </div>
+
+      <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <h4 style="color: #2d5016; margin-top: 0;">What's Next?</h4>
+        <ul style="color: #2d5016;">
+          <li>You'll receive notifications when blood requests match your type</li>
+          <li>Keep your profile updated with current availability</li>
+          <li>Track your donation history and earn certificates</li>
+          <li>Help save lives in your community!</li>
+        </ul>
+      </div>
+
+      <p>Your generous spirit and willingness to help others is truly appreciated. Every donation has the potential to save up to three lives!</p>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666;">
+        <p>You can update your donor profile anytime by logging into your account. If you have any questions, please don't hesitate to contact us.</p>
+        <p><strong>Important:</strong> Please ensure you meet all health requirements before donating blood.</p>
+      </div>
+    </div>
+  `;
+
+  return sendEmail({
+    email: user.email,
+    subject: '🩸 Welcome! Your Blood Donor Registration is Complete',
     html: message
   });
 };
