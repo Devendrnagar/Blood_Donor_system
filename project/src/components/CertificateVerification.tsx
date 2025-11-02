@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import { Shield, CheckCircle, XCircle, Calendar, MapPin, User, ExternalLink } from 'lucide-react';
 import { CertificateService } from '../lib/certificateService';
 
@@ -16,18 +15,9 @@ interface VerificationResult {
 }
 
 const CertificateVerification: React.FC = () => {
-  const { certificateId } = useParams<{ certificateId: string }>();
   const [result, setResult] = useState<VerificationResult | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [manualCertId, setManualCertId] = useState('');
-
-  useEffect(() => {
-    if (certificateId) {
-      verifyCertificate(certificateId);
-    } else {
-      setLoading(false);
-    }
-  }, [certificateId]);
 
   const verifyCertificate = async (certId: string) => {
     try {
@@ -54,7 +44,7 @@ const CertificateVerification: React.FC = () => {
   };
 
   const copyVerificationUrl = () => {
-    const url = `${window.location.origin}/verify/${certificateId || manualCertId}`;
+    const url = `${window.location.origin}/verify/${result?.certificateId || manualCertId}`;
     navigator.clipboard.writeText(url);
     alert('Verification URL copied to clipboard!');
   };
@@ -74,8 +64,7 @@ const CertificateVerification: React.FC = () => {
         </div>
 
         {/* Manual Verification Form */}
-        {!certificateId && (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h2 className="text-lg font-semibold mb-4">Enter Certificate ID</h2>
             <form onSubmit={handleManualVerification} className="space-y-4">
               <div>
@@ -102,7 +91,6 @@ const CertificateVerification: React.FC = () => {
               </button>
             </form>
           </div>
-        )}
 
         {/* Verification Result */}
         <div className="bg-white rounded-lg shadow-lg p-6">
